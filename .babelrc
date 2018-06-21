@@ -1,0 +1,18 @@
+{
+    "presets": [
+        "react",
+        ["env", {
+            "modules": false,
+            "targets": {
+                "node": "8",
+                "browsers": [ ">2%", "last 4 versions", "Firefox ESR", "not ie < 11" ]
+            },
+            "shippedProposals": true
+        }],
+        "stage-3"
+    ],
+    "plugins": [
+        "transform-class-properties", // These are currently stage 2, if they move to stage 3 we can get rid of this
+        "react-hot-loader/babel"
+    ]
+}
