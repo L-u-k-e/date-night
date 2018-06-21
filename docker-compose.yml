@@ -1,4 +1,7 @@
 version: "3.1"
+secrets:
+  maps-api-key:
+    file: ./secrets/maps-api-key
 services:
   app:
     image: node:8
@@ -7,3 +10,7 @@ services:
     working_dir: /usr/src/app
     volumes:
         - .:/usr/src/app
+    secrets:
+      - maps-api-key
+    environment:
+      MAPS_API_KEY_FILE_PATH: /run/secrets/maps-api-key

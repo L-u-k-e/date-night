@@ -16,3 +16,8 @@
 # package dependency directory for JS projects
 # ************
 node_modules
+
+# ***********
+# Secrets
+# ***********
+secrets
