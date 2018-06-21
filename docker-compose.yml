@@ -8,9 +8,17 @@ services:
     container_name: app
     command: [yarn, start]
     working_dir: /usr/src/app
+    networks:
+      - app
     volumes:
         - .:/usr/src/app
     secrets:
       - maps-api-key
     environment:
       MAPS_API_KEY_FILE_PATH: /run/secrets/maps-api-key
+      PORT: 80
+      NODE_ENV: development
+    ports:
+      - "80:80"
+networks:
+  app:

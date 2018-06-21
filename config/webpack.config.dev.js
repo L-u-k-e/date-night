@@ -155,9 +155,7 @@ const webpackConfig = {
       template: paths.appHtml,
     }),
     new CopyWebpackPlugin([
-      { from: paths.appFavicon },
       { from: paths.appWebManifest },
-      ...paths.appManifestPNGs.map(p => ({ from: p }))
     ]),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),

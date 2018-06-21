@@ -1,0 +1,58 @@
+@import 'react-toolbox/lib/colors.css';
+@import 'react-toolbox/lib/variables.css';
+
+
+:root {
+  --color-primary: var(--palette-blue-grey-800);
+  @value rt-color-primary: var(--palette-blue-grey-800);
+
+  --color-primary-dark: var(--palette-blue-grey-900);
+  @value rt-color-primary-dark: var(--palette-blue-grey-900);
+
+  --color-accent-light: var(--palette-deep-purple-a100);
+  @value rt-color-accent-light: var(--palette-deep-purple-a100);
+
+  --color-accent: var(--palette-deep-purple-a200);
+  @value rt-color-accent: var(--palette-deep-purple-a200);
+
+  --color-accent-dark: var(--palette-deep-purple-a400);
+  @value rt-color-accent-dark: var(--palette-deep-purple-a400);
+
+  --color-primary-contrast: var(--color-dark-contrast);
+  @value rt-color-primary-contrast: var(--color-dark-contrast);
+
+  --color-accent-contrast: var(--color-dark-contrast);
+  @value rt-color-accent-contrast: var(--color-dark-contrast);
+
+  /*
+    --input-text-highlight-color: var(--color-accent);
+    @value rt-input-text-highlight-color: var(--color-accent);
+
+    --input-text-label-color: var(--color-text-secondary);
+    @value rt-input-text-label-color: var(--color-text-secondary);
+  */
+
+  --item-divider-color: rgba(0, 0, 0, 0.12);
+  --item-selected-color: var(--palette-blue-500);
+  --item-selected-contrast: var(--color-dark-contrast);
+
+  --drawer-size: 328px;
+  --drawer-bg-color: var(--palette-blue-grey-900);
+  --drawer-bg-color-contrast: var(--color-dark-contrast);
+
+
+  /**
+   * These are taken from the material design spec:
+   * https://material.io/guidelines/motion/duration-easing.html
+   */
+  --animation-curve-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --animation-curve-deceleration: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --animation-curve-acceleration: cubic-bezier(0.4, 0.0, 1, 1);
+  --animation-curve-sharp: cubic-bezier(0.4, 0.0, 0.6, 1);
+
+
+  --animation-curve-within-screen-bounds: var(--animation-curve-standard);
+  --animation-curve-entering: var(--animation-curve-deceleration);
+  --animation-curve-exiting-temporarily: var(--animation-curve-sharp);
+  --animation-curve-exiting-permanantly: var(--animation-curve-acceleration);
+}

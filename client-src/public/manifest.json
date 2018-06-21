@@ -1,0 +1,9 @@
+{
+  "short_name": "CellAssist",
+  "name": "CellAssist",
+  "icons": [],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#F44336",
+  "background_color": "#ECEFF1"
+}

@@ -1,0 +1,76 @@
+@import 'variables';
+@import 'material-icons';
+@import 'roboto-font-face';
+@import 'reset';
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: var(--z-index-normal);
+  margin: 0;
+  padding: 0;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-family: var(--preferred-font);
+  font-size: var(--font-size-normal);
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  color: var(--color-text);
+}
+::-webkit-scrollbar {
+  background: transparent;
+}
+
+.material-icons {
+  user-select: none;
+}
+
+h1 {
+  font-size: 112px;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: 56px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: 45px;
+  font-weight: 400;
+  line-height: 48px;
+}
+
+h4 {
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 40px;
+}
+
+h5 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h6 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.02em;
+}
+
+textarea {
+  font-family: inherit;
+}

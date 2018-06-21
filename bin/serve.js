@@ -1,5 +1,25 @@
-const Maps = require('@google/maps');
-const mapsAPIKey = require('../libraries/maps-api-key');
+const Express = require('express');
+const HTTP = require('http');
+const Path = require('path');
+const Chalk = require('chalk');
+const Webpack = require('webpack');
+const History = require('connect-history-api-fallback');
+const WebpackDevMiddleware = require('webpack-dev-middleware');
+const WebpackHotMiddleware = require('webpack-hot-middleware');
+const WebpackDevConfigPromise = require('../config/webpack.config.dev');
+// const ServiceBundle = require('../services');
+
+
+
+
+
+// unhandled errors should crash the process
+process.on('unhandledRejection', error => {
+  console.error(error);
+  console.error(JSON.stringify(error, null, 2));
+  console.error(error.toString());
+  throw error;
+});
 
 
 
@@ -7,24 +27,45 @@ const mapsAPIKey = require('../libraries/maps-api-key');
 
 main();
 async function main() {
-  const mapsClient = Maps.createClient({
-    key: mapsAPIKey,
-    Promise: Promise
-  });
-
-  const latLngSample = [42.515779, -71.039001];
-  try {
-    const reply = await (
-      mapsClient.placesNearby({
-        location: latLngSample,
-        radius: 5000
-      })
-      .asPromise()
+  const expressApp = Express();
+  if (process.env.NODE_ENV === 'development') {
+    expressApp.use(History());
+    const config = await WebpackDevConfigPromise;
+    const primedWebpackCompiler = Webpack(config);
+    expressApp.use(
+      WebpackDevMiddleware(
+        primedWebpackCompiler,
+        {
+          publicPath: config.output.publicPath,
+          stats: {
+            colors: true
+          }
+        }
+      )
     );
-
-    const place = reply.json.results[0];
-    console.log(place);
-  } catch (error) {
-    console.log(error);
+    expressApp.use(
+      WebpackHotMiddleware(primedWebpackCompiler)
+    );
+  } else {
+    expressApp.use(Express.static(Path.join(__dirname, '..', 'client-build')));
+    expressApp.get('*', (req, res) => {
+      // handle every route with index.html, where the react router will take over
+      res.sendFile('index.html', { root: Path.join(__dirname, '..', 'client-build') });
+    });
   }
+
+
+
+  const httpServer = HTTP.createServer(expressApp);
+  // ServiceBundle.initialize(socketIOServer);
+
+
+  const port = process.env.PORT || 80;
+  httpServer.listen(port, err => {
+    if (err) {
+      console.log(Chalk.red(err));
+      return;
+    }
+    console.log(Chalk.cyan(`Listening for connections on port ${port}`));
+  });
 }
