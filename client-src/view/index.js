@@ -1,5 +1,6 @@
 import * as Ramda from 'ramda';
 import React from 'react';
+import Matcher from 'view/components/matcher';
 
 
 
@@ -9,7 +10,7 @@ View.propTypes = {
 function View() {
   return (
     <React.Fragment>
-      Hello Matee!
+      <Matcher />
     </React.Fragment>
   );
 }
