@@ -7,7 +7,7 @@ const History = require('connect-history-api-fallback');
 const WebpackDevMiddleware = require('webpack-dev-middleware');
 const WebpackHotMiddleware = require('webpack-hot-middleware');
 const WebpackDevConfigPromise = require('../config/webpack.config.dev');
-const getPlaces = require('../libraries/get-places');
+const APIRouter = require('../api');
 
 
 
@@ -28,7 +28,8 @@ process.on('unhandledRejection', error => {
 main();
 async function main() {
   const expressApp = Express();
-  expressApp.get('/api/places', getPlaces);
+  expressApp.use('/api', APIRouter);
+
   if (process.env.NODE_ENV === 'development') {
     expressApp.use(History());
     const config = await WebpackDevConfigPromise;
@@ -55,13 +56,7 @@ async function main() {
     });
   }
 
-
-
-
-
   const httpServer = HTTP.createServer(expressApp);
-
-
   const port = process.env.PORT || 80;
   httpServer.listen(port, err => {
     if (err) {

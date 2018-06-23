@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { themr } from 'react-css-themr';
 import wrapWithFunctionChildComponent from 'view/libraries/wrap-with-function-child-component';
+import Place from './components/place';
 import baseTheme from './theme.css';
 
 
@@ -31,7 +32,7 @@ function Matcher(props) {
       {loading ? (
         'please wait...'
       ) : (
-        'done loading!!!'
+        <Place place={places[0]} />
       )}
     </div>
   );
@@ -98,12 +99,11 @@ class PlacesProvider extends React.Component {
 
   async componentWillReceiveProps(nextProps) {
     if (this.props.loadingLocation && !nextProps.loadingLocation) {
-      console.log(nextProps.location);
       const { coords: { latitude, longitude } } = nextProps.location;
       const url = `https://${window.location.host}/api/places?latitude=${latitude}&longitude=${longitude}`;
       const reply = await fetch(url);
       const places = await reply.json();
-      console.log(places);
+      this.setState({ places, loadingPlaces: false });
     }
   }
 
