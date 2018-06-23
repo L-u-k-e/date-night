@@ -33,6 +33,7 @@ const webpackConfig = {
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: 'cheap-module-source-map',
   entry: [
+    require.resolve('babel-polyfill'),
     require.resolve('react-hot-loader/patch'),
     require.resolve('webpack-hot-middleware/client'),
     paths.appIndexJs,

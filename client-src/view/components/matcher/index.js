@@ -96,10 +96,14 @@ class PlacesProvider extends React.Component {
     loadingPlaces: true
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if (this.props.loadingLocation && !nextProps.loadingLocation) {
       console.log(nextProps.location);
-      // get places and set state when you have them
+      const { coords: { latitude, longitude } } = nextProps.location;
+      const url = `https://${window.location.host}/api/places?latitude=${latitude}&longitude=${longitude}`;
+      const reply = await fetch(url);
+      const places = await reply.json();
+      console.log(places);
     }
   }
 
