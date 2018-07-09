@@ -7252,7 +7252,7 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 1
+  Exit signal: SIGINT
   Command: sh
   Arguments: -c node bin/serve.js
   Directory: /usr/src/app

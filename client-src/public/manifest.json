@@ -1,9 +1,9 @@
 {
-  "short_name": "CellAssist",
-  "name": "CellAssist",
+  "short_name": "Date Night",
+  "name": "Date Night",
   "icons": [],
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#F44336",
-  "background_color": "#ECEFF1"
+  "theme_color": "#000000",
+  "background_color": "#FFFFFF"
 }

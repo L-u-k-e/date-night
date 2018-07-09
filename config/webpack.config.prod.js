@@ -16,7 +16,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const eslintFormatter = require('react-dev-utils/eslintFormatter');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const paths = require('./paths');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -35,6 +35,7 @@ const webpackConfig = {
   // Don't attempt to continue if there are any errors.
   bail: true,
   entry: [
+    require.resolve('babel-polyfill'),
     paths.appIndexJs,
     paths.appStylesIndex
   ],
@@ -152,9 +153,7 @@ const webpackConfig = {
     }),
     // copies static files to the output directory
     new CopyWebpackPlugin([
-      { from: paths.appFavicon },
       { from: paths.appWebManifest },
-      ...paths.appManifestPNGs.map(p => ({ from: p }))
     ]),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without

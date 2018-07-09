@@ -31,12 +31,16 @@ function Place(props) {
   } = props;
 
   return (
-    <div className={classNames(className, theme.root)}>
-      {place.name}
+    <div className={classNames(className, theme.place)}>
       <img
+        className={theme.image}
         src={`https://${window.location.host}/api/photos?ref=${place.photos[0].photo_reference}`}
         alt={place.name}
       />
+      <div className={theme.info}>
+        <h4> {place.name} </h4>
+        <div dangerouslySetInnerHTML={{ __html: place.adr_address }} />
+      </div>
     </div>
   );
 }

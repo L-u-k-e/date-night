@@ -1,6 +1,6 @@
 // const Ramda = require('ramda');
 const express = require('express');
-const mapsClient = require('../../libraries/maps-client');
+const getMapsClient = require('../../libraries/get-maps-client');
 
 
 
@@ -16,6 +16,7 @@ router.get('/', getPhoto);
 async function getPhoto(req, res) {
   const { ref } = req.query;
   try {
+    const mapsClient = await getMapsClient();
     const photoReply = await (
       mapsClient.placesPhoto({
         photoreference: ref,

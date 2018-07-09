@@ -1,6 +1,6 @@
 const Ramda = require('ramda');
 const express = require('express');
-const mapsClient = require('../../libraries/maps-client');
+const getMapsClient = require('../../libraries/get-maps-client');
 
 
 
@@ -16,6 +16,7 @@ router.get('/', getPlaces);
 async function getPlaces(req, res) {
   const { latitude, longitude } = req.query;
   try {
+    const mapsClient = await getMapsClient();
     const placesReply = await (
       mapsClient.placesNearby({
         location: [latitude, longitude],

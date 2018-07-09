@@ -6,7 +6,6 @@ const Webpack = require('webpack');
 const History = require('connect-history-api-fallback');
 const WebpackDevMiddleware = require('webpack-dev-middleware');
 const WebpackHotMiddleware = require('webpack-hot-middleware');
-const WebpackDevConfigPromise = require('../config/webpack.config.dev');
 const APIRouter = require('../api');
 
 
@@ -32,6 +31,7 @@ async function main() {
 
   if (process.env.NODE_ENV === 'development') {
     expressApp.use(History());
+    const WebpackDevConfigPromise = require('../config/webpack.config.dev'); // eslint-disable-line
     const config = await WebpackDevConfigPromise;
     const primedWebpackCompiler = Webpack(config);
     expressApp.use(

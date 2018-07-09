@@ -1,7 +1,7 @@
 const express = require('express');
 const placesRouter = require('./routers/places');
 const photosRouter = require('./routers/photos');
-
+require('../libraries/configure-aws-sdk');
 
 
 

@@ -21,3 +21,14 @@ node_modules
 # Secrets
 # ***********
 secrets
+
+# ***********
+# Terraform local data directory
+# ***********
+.terraform
+terraform.*
+
+# ***********
+# Client app build directory
+# ***********
+client-build

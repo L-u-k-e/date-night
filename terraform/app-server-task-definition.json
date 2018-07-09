@@ -1,0 +1,21 @@
+[
+  {
+    "name": "app_server",
+    "image": "lukeparzych/datenight:latest",
+    "command": ["yarn", "start"],
+    "portMappings": [
+      {
+        "containerPort": 80
+      },
+      {
+        "containerPort": 443
+      }
+    ],
+    "environment" : [
+      { "name" : "PORT", "value" : "80" },
+      { "name" : "NODE_ENV", "value" : "production" }
+    ],
+    "memory": 300,
+    "networkMode": "awsvpc"
+  }
+]

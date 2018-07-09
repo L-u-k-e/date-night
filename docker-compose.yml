@@ -8,12 +8,14 @@ secrets:
       file: ./secrets/tls/dev/self-signed.crt
   tls-dhparam:
       file: ./secrets/tls/dev/dhparam.pem
+  aws-administrator-credentials:
+    file: ./secrets/aws-administrator-credentials
 services:
-  app-proxy:
+  app:
     image: nginx
     container_name: app-proxy
     depends_on:
-      - app
+      - app-core
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
     networks:
@@ -24,9 +26,9 @@ services:
       - tls-dhparam
     ports:
       - "443:443"
-  app:
-    image: node:8
-    container_name: app
+  app-core:
+    image: lukeparzych/datenight:latest
+    container_name: app-core
     command: [yarn, start]
     working_dir: /usr/src/app
     networks:
@@ -34,10 +36,19 @@ services:
     volumes:
         - .:/usr/src/app
     secrets:
-      - maps-api-key
+      - aws-administrator-credentials
     environment:
-      MAPS_API_KEY_FILE_PATH: /run/secrets/maps-api-key
       PORT: 80
       NODE_ENV: development
+  tf:
+    image: hashicorp/terraform
+    container_name: tf
+    working_dir: /tf
+    volumes:
+      - ./terraform:/tf
+    secrets:
+      - aws-administrator-credentials
+      - maps-api-key
 networks:
   app:
+
