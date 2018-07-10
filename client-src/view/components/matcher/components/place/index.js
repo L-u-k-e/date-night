@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 // import { connect } from 'react-redux';
 import { themr } from 'react-css-themr';
+import { IconButton } from 'react-toolbox/lib/button';
 // import {  } from 'redux/action-creators';
 // import {  } from 'redux/selectors';
 // import wrapWithFunctionChildComponent from 'view/libraries/wrap-with-function-child-component';
@@ -32,14 +33,19 @@ function Place(props) {
 
   return (
     <div className={classNames(className, theme.place)}>
-      <img
+      <div
         className={theme.image}
-        src={`https://${window.location.host}/api/photos?ref=${place.photos[0].photo_reference}`}
-        alt={place.name}
+        style={{
+          backgroundImage: `url(https://${window.location.host}/api/photos?ref=${place.photos[0].photo_reference})`
+        }}
       />
       <div className={theme.info}>
         <h4> {place.name} </h4>
         <div dangerouslySetInnerHTML={{ __html: place.adr_address }} />
+      </div>
+      <div className={theme.actions}>
+        <IconButton className={classNames(theme.actionButton, theme.next)} icon="shuffle" theme={theme} />
+        <IconButton className={classNames(theme.actionButton, theme.directions)} icon="directions" theme={theme} />
       </div>
     </div>
   );

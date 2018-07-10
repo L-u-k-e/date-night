@@ -8,15 +8,50 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  background: var(--palette-grey-50);
+
   & .image {
     flex-shrink: 1;
+    height: 70%;
     min-height: 0;
     min-width: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
   }
 
   & .info {
     flex-shrink: 0;
     padding: 24px;
+    flex: 1;
   }
 
+  & .actions {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    & .actionButton {
+      margin: 24px;
+      height: 64px;
+      width: 64px;
+      box-shadow: var(--shadow-8p);
+
+      & .icon {
+        font-size: 24px;
+      }
+
+      &.next {
+        background-color: var(--palette-grey-800);
+        color: var(--color-dark-contrast);
+      }
+
+      &.directions {
+        background-color: var(--palette-teal-a200);
+        color: var(--color-light-contrast);
+      }
+    }
+  }
 }
