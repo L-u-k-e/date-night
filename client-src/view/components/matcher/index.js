@@ -18,21 +18,30 @@ Matcher.propTypes = {
   places: PropTypes.array,
 
   // provideLoading
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+
+  // controlCurrentPlace
+  currentPlaceIndex: PropTypes.number.isRequired,
+  onNewPlace: PropTypes.func.isRequired,
 };
 Matcher.defaultProps = {
   loading: true,
   places: []
 };
 function Matcher(props) {
-  const { theme, loading, places } = props;
-  console.log(places);
+  const {
+    theme,
+    loading,
+    places,
+    currentPlaceIndex,
+    onNewPlace
+  } = props;
   return (
     <div className={theme.matcher}>
       {loading ? (
         'please wait...'
       ) : (
-        <Place place={places[0]} />
+        <Place place={places[currentPlaceIndex]} onNewPlace={onNewPlace} />
       )}
     </div>
   );
@@ -139,13 +148,66 @@ const provideLoading = wrapWithFunctionChildComponent(LoadingProvider);
 
 
 
+class CurrentPlaceController extends React.Component {
+  static propTypes = {
+    // providePlaces
+    places: PropTypes.array, // eslint-disable-line
+
+    // provideLoading
+    loading: PropTypes.bool.isRequired,
+
+    children: PropTypes.any.isRequired,
+  };
+
+  static defaultProps = {
+    places: null
+  };
+
+  state = {
+    currentPlaceIndex: 0
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.loading && !nextProps.loading) {
+      const currentPlaceIndex = this.getNewPlaceIndex({ exclusiveMaxIndex: nextProps.places.length });
+      this.setState({ currentPlaceIndex });
+    }
+  }
+
+  getNewPlaceIndex = ({ exclusiveMaxIndex }) => {
+    const { currentPlaceIndex } = this.state;
+    let newPlaceIndex = currentPlaceIndex;
+    while (newPlaceIndex === currentPlaceIndex) {
+      newPlaceIndex = Math.floor(Math.random() * exclusiveMaxIndex);
+    }
+    return newPlaceIndex;
+  }
+
+  shufflePlaceIndex = () => {
+    const { places } = this.props;
+    const currentPlaceIndex = this.getNewPlaceIndex({ exclusiveMaxIndex: places.length });
+    this.setState({ currentPlaceIndex });
+  }
+
+  render() {
+    const { children } = this.props;
+    const { currentPlaceIndex } = this.state;
+    return children({ currentPlaceIndex, onNewPlace: this.shufflePlaceIndex });
+  }
+}
+const controlCurrentPlace = wrapWithFunctionChildComponent(CurrentPlaceController);
+
+
+
+
 
 const MatcherContainer = (
   Ramda.compose(
     setTheme,
     provideLocation,
     providePlaces,
-    provideLoading
+    provideLoading,
+    controlCurrentPlace,
   )(Matcher)
 );
 MatcherContainer.displayName = 'MatcherContainer';
