@@ -40,7 +40,7 @@ function Place(props) {
       <div
         className={theme.image}
         style={{
-          backgroundImage: `url(https://${window.location.host}/api/photos?ref=${place.photos[0].photo_reference})`
+          backgroundImage: `url(${window.location.origin}/api/photos?ref=${place.photos[0].photo_reference})`
         }}
       />
       <div className={theme.info}>

@@ -72,7 +72,14 @@ class LocationProvider extends React.Component {
 
   componentWillMount() {
     navigator.geolocation.getCurrentPosition(
-      position => this.setState({ location: position, loadingLocation: false })
+      position => this.setState({ location: position, loadingLocation: false }),
+      error => {
+        console.log(error);
+        // while we dont have https we can expect an error here. lets use hardcoded coords just for testing
+        // this is the lat/ long of some pace in the Boston MA North End
+        const fakePosition = { coords: { latitude: 42.362855, longitude: -71.066159 } };
+        this.setState({ location: fakePosition, loadingLocation: false });
+      }
     );
   }
 
@@ -109,7 +116,7 @@ class PlacesProvider extends React.Component {
   async componentWillReceiveProps(nextProps) {
     if (this.props.loadingLocation && !nextProps.loadingLocation) {
       const { coords: { latitude, longitude } } = nextProps.location;
-      const url = `https://${window.location.host}/api/places?latitude=${latitude}&longitude=${longitude}`;
+      const url = `${window.location.origin}/api/places?latitude=${latitude}&longitude=${longitude}`;
       const reply = await fetch(url);
       const places = await reply.json();
       this.setState({ places, loadingPlaces: false });

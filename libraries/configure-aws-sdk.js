@@ -1,8 +1,13 @@
 const AWS = require('aws-sdk');
 const PropertiesReader = require('properties-reader');
 
-// in production, configuration is handled for us by ECS, so we only need to configure in dev
-if (process.env !== 'production') {
+if (process.env.NODE_ENV === 'production') {
+  AWS.config.update({
+    region: 'us-east-2',
+    credentials: new AWS.ECSCredentials()
+  });
+  console.log(AWS.config);
+} else {
   const creds = PropertiesReader('/run/secrets/aws-administrator-credentials');
   AWS.config.update({
     region: 'us-east-2',

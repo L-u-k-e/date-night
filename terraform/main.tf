@@ -38,10 +38,10 @@ module "vpc" {
 	*/
 	cidr = "10.0.0.0/16"
 	azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
-	// private_subnets = ["10.0.0.0/19", "10.0.64.0/19", "10.0.128.0/19"]
-	public_subnets = ["10.0.48.0/20", "10.0.112.0/20", "10.0.176.0/20"]
+	private_subnets = ["10.0.0.0/19", "10.0.64.0/19", "10.0.128.0/19"]
+  public_subnets = ["10.0.48.0/20", "10.0.112.0/20", "10.0.176.0/20"]
 
-	//enable_nat_gateway = true
+	enable_nat_gateway = true
 
 	tags = {
 		Environment = "dev"
@@ -51,6 +51,27 @@ module "vpc" {
 
 
 #Security Group Setup
+
+resource "aws_security_group" "ssh_bastion" {
+  name        = "ssh-bastion"
+  description = "allows ssh access to the ssh bastion"
+	vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "app_server" {
 	name        = "app-server"
 	description = "Allow all inbound/ outbound traffic"
@@ -211,6 +232,7 @@ data "aws_iam_policy_document" "maps_api_key_retrieval" {
     effect = "Allow"
 
     actions = [
+      "ssm:GetParameter",
       "ssm:GetParameters"
     ]
 
@@ -289,13 +311,13 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_ecs_service" "app_server" {
   name             = "app-server"
   task_definition  = "${aws_ecs_task_definition.app_server.family}:${aws_ecs_task_definition.app_server.revision}"
-  desired_count    = 3
+  desired_count    = 1
   launch_type      = "EC2"
   cluster          = "${aws_ecs_cluster.main.id}"
 
   network_configuration {
     security_groups = ["${aws_security_group.app_server.id}"]
-    subnets         = ["${module.vpc.public_subnets}"]
+    subnets         = ["${module.vpc.private_subnets}"]
   }
 
 	# Spread tasks evenly across EC2 instances in the cluster
@@ -334,12 +356,12 @@ data "template_file" "user_data" {
 
 resource "aws_autoscaling_group" "app_server" {
   name = "app-server"
-  vpc_zone_identifier  = ["${module.vpc.public_subnets}"]
+  vpc_zone_identifier  = ["${module.vpc.private_subnets}"]
   launch_configuration = "${aws_launch_configuration.app_server.name}"
 
-  desired_capacity = 3
-  min_size = 3
-  max_size = 6
+  desired_capacity = 1
+  min_size = 1
+  max_size = 2
 }
 
 resource "aws_launch_configuration" "app_server" {
@@ -400,6 +422,9 @@ resource "aws_lb_listener" "listener" {
 	port              = "80"
 	protocol          = "HTTP"
 
+  #security_policy   = "ELBSecurityPolicy-2016-08"
+  #certificate_arn   = "${data.aws_acm_certificate.sslcert.arn}"
+
 	default_action {
 		target_group_arn = "${aws_lb_target_group.target-group.arn}"
 		type             = "forward"
@@ -408,6 +433,42 @@ resource "aws_lb_listener" "listener" {
 
 
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  # ubuntu ami account ID
+  owners = ["099720109477"]
+
+  filter {
+    name = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
+}
+
+#Bastion for SSH to instances in the private subnet
+resource "aws_instance" "ssh_bastion" {
+	ami	= "${data.aws_ami.ubuntu.id}"
+	subnet_id = "${module.vpc.public_subnets[1]}"
+	key_name = "administrator-key-pair-useast2"
+  instance_type = "t2.micro"
+  iam_instance_profile = "${aws_iam_instance_profile.container_instance.name}"
+	vpc_security_group_ids = ["${aws_security_group.ssh_bastion.id}"]
+}
+
+
+
+
+
+/*
+resource "aws_acm_certificate" "sslcert" {
+  domain_name       = "${data.aws_lb.load-balancer.dns_name}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+*/
 
 /*
 
